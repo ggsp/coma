@@ -1,0 +1,41 @@
+{
+  "common": {
+    "appName": "COMA",
+    "appDescription": "Research & Funding Community Platform",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "loading": "Loading...",
+    "error": "Error",
+    "notFound": "Not found",
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "navigation": {
+    "explore": "Explore",
+    "projects": "Projects",
+    "researchers": "Researchers",
+    "funders": "Funders",
+    "community": "Community",
+    "dashboard": "Dashboard"
+  },
+  "projects": {
+    "title": "Projects",
+    "explore": "Explore Research Projects",
+    "searchPlaceholder": "Search projects...",
+    "filters": {
+      "topic": "Topic",
+      "funder": "Funding Body",
+      "year": "Year",
+      "amount": "Funding Amount"
+    },
+    "details": {
+      "summary": "Summary",
+      "funding": "Funding",
+      "duration": "Duration",
+      "pi": "Principal Investigator",
+      "tags": "Tags"
+    }
+  }
+}

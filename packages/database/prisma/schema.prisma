@@ -1,0 +1,184 @@
+// Prisma schema for COMA platform
+// Research & Funding Community Platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  GUEST
+  RESEARCHER
+  FUNDER
+  ADMIN
+}
+
+enum ProjectStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum SpaceVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+model User {
+  id          String    @id @default(cuid())
+  name        String
+  email       String    @unique
+  role        UserRole  @default(GUEST)
+  affiliation String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  profile      Profile?
+  projects     Project[]  @relation("ProjectPI")
+  posts        Post[]
+  comments     Comment[]
+  annotations  Annotation[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model Profile {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  bio           String?  @db.Text
+  orcidId       String?  @unique
+  avatarUrl     String?
+  researchAreas String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([orcidId])
+}
+
+model Funder {
+  id          String    @id @default(cuid())
+  name        String
+  description String?   @db.Text
+  website     String?
+  country     String?
+  logoUrl     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  projects Project[]
+
+  @@index([name])
+  @@index([country])
+}
+
+model Project {
+  id            String        @id @default(cuid())
+  title         String
+  summary       String        @db.Text
+  description   String?       @db.Text
+  startDate     DateTime
+  endDate       DateTime?
+  fundingAmount Decimal       @db.Decimal(15, 2)
+  currency      String        @default("EUR")
+  status        ProjectStatus @default(PLANNED)
+  funderId      String
+  piUserId      String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  funder      Funder       @relation(fields: [funderId], references: [id])
+  pi          User?        @relation("ProjectPI", fields: [piUserId], references: [id])
+  tags        Tag[]        @relation("ProjectTags")
+  annotations Annotation[]
+
+  @@index([funderId])
+  @@index([piUserId])
+  @@index([status])
+  @@index([startDate])
+  @@index([fundingAmount])
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  category  String?
+  createdAt DateTime @default(now())
+
+  projects Project[] @relation("ProjectTags")
+
+  @@index([category])
+  @@index([name])
+}
+
+model Space {
+  id          String          @id @default(cuid())
+  name        String          @unique
+  description String          @db.Text
+  visibility  SpaceVisibility @default(PUBLIC)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  posts Post[]
+
+  @@index([visibility])
+  @@index([name])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  spaceId   String
+  authorId  String
+  title     String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  space    Space     @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  author   User      @relation(fields: [authorId], references: [id])
+  comments Comment[]
+
+  @@index([spaceId])
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  authorId  String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author User @relation(fields: [authorId], references: [id])
+
+  @@index([postId])
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model Annotation {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+  content   String   @db.Text
+  category  String? // e.g., "High Impact", "Needs Follow-up"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@index([projectId])
+  @@index([userId])
+  @@index([category])
+}

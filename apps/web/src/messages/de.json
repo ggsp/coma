@@ -1,0 +1,41 @@
+{
+  "common": {
+    "appName": "COMA",
+    "appDescription": "Forschungs- & Förderungs-Community-Plattform",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "clear": "Löschen",
+    "loading": "Wird geladen...",
+    "error": "Fehler",
+    "notFound": "Nicht gefunden",
+    "home": "Startseite",
+    "about": "Über uns",
+    "contact": "Kontakt"
+  },
+  "navigation": {
+    "explore": "Entdecken",
+    "projects": "Projekte",
+    "researchers": "Forschende",
+    "funders": "Förderer",
+    "community": "Community",
+    "dashboard": "Dashboard"
+  },
+  "projects": {
+    "title": "Projekte",
+    "explore": "Forschungsprojekte erkunden",
+    "searchPlaceholder": "Projekte suchen...",
+    "filters": {
+      "topic": "Thema",
+      "funder": "Förderorganisation",
+      "year": "Jahr",
+      "amount": "Fördersumme"
+    },
+    "details": {
+      "summary": "Zusammenfassung",
+      "funding": "Förderung",
+      "duration": "Laufzeit",
+      "pi": "Projektleitung",
+      "tags": "Schlagwörter"
+    }
+  }
+}
